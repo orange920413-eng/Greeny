@@ -1,0 +1,16 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>回执汇总 · Guest replies</title><link rel="stylesheet" href="/style.css"><style>table{border-collapse:collapse;width:100%;margin:1.5rem 0}th,td{text-align:left;border-bottom:1px solid var(--line);padding:.65rem .3rem;overflow-wrap:anywhere}thead{color:var(--wine)}</style><main class="paper"><p class="kicker">GIN &amp; GREENY</p><h1 style="font-size:2.5rem;line-height:1.3;letter-spacing:0">回执汇总 <i>Guest replies</i></h1><p id="summary" role="status"></p><table><thead><tr><th>姓名 · Name</th><th>出席 · Attending</th><th>人数 · Guests</th></tr></thead><tbody></tbody></table><a href="/">返回请柬 · Invitation</a></main><script>
+async function loadReplies(){
+ const summary=document.querySelector('#summary');
+ try {
+  const response=await fetch('/api/summary');
+  if(!response.ok) throw new Error();
+  const rows=await response.json();
+  const seats=rows.reduce((sum,row)=>sum+row.guests,0);
+  summary.textContent=rows.length+' 份回执 / Replies · '+seats+' 位出席 / Guests attending';
+  for(const row of rows){
+   const tr=document.querySelector('tbody').insertRow();
+   for(const value of [row.name,row.attending?'出席 · Yes':'无法出席 · No',row.guests]) tr.insertCell().textContent=value;
+  }
+ } catch {summary.textContent='暂时无法读取，请刷新重试。 Unable to load replies. Please refresh.';}
+}loadReplies();
+</script></html>
