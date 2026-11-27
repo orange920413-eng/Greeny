@@ -86,3 +86,20 @@ cite span { margin-left: .35em; font-style: italic; }
 .invite i, .reply .section-title > p:last-child i {
   margin-top: .65rem;
 }
+
+.gallery {border-top:1px solid var(--line)}
+.spread {margin:clamp(1.4rem,4vw,3rem) auto 0;max-width:52rem}
+.album-note {line-height:1.9}
+.photo-grid {display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(.5rem,1vw,1rem)}
+.photo-grid img {width:100%;height:auto;display:block;grid-column:span 2}
+.photo-grid img.wide {grid-column:1/-1}
+.photo-grid img:nth-child(2),.photo-grid img:nth-child(3) {grid-column:span 3}
+.photo-grid .tall:only-child {grid-column:2/6}
+@media(max-width:720px){.spread{display:block}.spread h3{margin-bottom:1rem}.photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.photo-grid img,.photo-grid img:nth-child(2),.photo-grid img:nth-child(3){grid-column:span 1}.photo-grid img.wide,.photo-grid .tall:only-child,.photo-grid img:last-child:nth-child(even){grid-column:1/-1}}
+
+.gin-letter {max-width:52rem;margin:auto;padding:0 6vw clamp(3rem,7vw,6rem)}
+.gin-letter h2 {border-top:1px solid #b98c83;padding-top:1.6rem;font-size:clamp(1.5rem,3vw,2rem)}
+.gin-letter h2 i {display:block;font-size:1rem;font-weight:400;letter-spacing:normal;color:#eed5c6}
+.gin-letter p {margin:.8rem 0;line-height:1.85}
+.gin-letter details {margin-top:1.4rem;color:#eed5c6}
+.gin-letter summary {cursor:pointer;width:fit-content;padding:.3rem 0}

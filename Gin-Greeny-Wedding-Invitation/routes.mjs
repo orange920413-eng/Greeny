@@ -34,7 +34,7 @@ export async function handle(request, env, assets, ownerHash) {
   const asset=Object.hasOwn(assets,path) && assets[path];
   if(!asset || !['GET','HEAD'].includes(request.method)) return new Response('Not found',{status:404});
   const [type,text] = asset;
-  const binary = type === 'image/jpeg' || type === 'font/woff';
+  const binary = type.startsWith('image/') || type === 'font/woff';
   const content = binary ? Uint8Array.from(atob(text),c=>c.charCodeAt(0)) : text;
   return new Response(request.method==='HEAD'?null:content,{headers:{'Content-Type':type,'Cache-Control':path==='/admin'?'no-store':'no-cache','X-Content-Type-Options':'nosniff'}});
 }
