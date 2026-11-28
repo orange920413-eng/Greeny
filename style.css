@@ -103,3 +103,5 @@ cite span { margin-left: .35em; font-style: italic; }
 .gin-letter p {margin:.8rem 0;line-height:1.85}
 .gin-letter details {margin-top:1.4rem;color:#eed5c6}
 .gin-letter summary {cursor:pointer;width:fit-content;padding:.3rem 0}
+
+#backup{margin-top:1.4rem}#backup summary{cursor:pointer}#backup textarea{font:inherit;margin:.7rem 0;padding:.5rem}
