@@ -72,8 +72,16 @@ function updateMessage(){
 form.addEventListener('input',updateMessage);
 backup.addEventListener('toggle',updateMessage);
 document.querySelector('#copy').addEventListener('click',async()=>{
+  if (!form.reportValidity()) return;
   updateMessage();
   try {await navigator.clipboard.writeText(message.value);document.querySelector('#copied').textContent='已复制，请粘贴到微信发给新人。 Copied. Please send it to the couple.';}
   catch {message.focus();message.select();document.querySelector('#copied').textContent='请长按复制，然后发给新人。 Select and copy the message.';}
 });
 updateMessage();
+
+const songButton = document.getElementById('load-song');
+if (songButton) {
+  songButton.addEventListener('click', () => {
+    songButton.replaceWith(document.getElementById('song-template').content.cloneNode(true));
+  });
+}
