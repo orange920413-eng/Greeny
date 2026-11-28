@@ -56,32 +56,6 @@ form.addEventListener('submit', async event => {
     if (!result.ok || (await result.json()).ok !== true) throw new Error();
     showStatus('谢谢，已收到你的回执。', 'Thank you, your reply is saved.');
   } catch {
-    document.querySelector('#backup').open=true;
-    showStatus('未能确认提交。请重试，或把下面的回执发给我们。', 'Please retry or send the message below.');
+    showStatus('暂时未能确认收到回执。请稍后在此重试，已填写的内容会保留在本页。', 'Your reply could not be confirmed. Please try again here.');
   } finally { button.disabled = false; }
 });
-
-const backup = document.getElementById('backup');
-const message = backup.querySelector('textarea');
-function updateMessage(){
-  const guest=form.elements.guest.value.trim() || '（填写姓名）';
-  const answer=form.elements.attending.value;
-  const reply=answer==='yes' ? '出席，含我共 '+(count.value || '___')+' 人' : answer==='no' ? '无法出席' : '（出席，共___人 / 无法出席）';
-  message.value='晓宇、诗宜，你们好！我是'+guest+'。我的婚礼回执：'+reply+'。';
-}
-form.addEventListener('input',updateMessage);
-backup.addEventListener('toggle',updateMessage);
-document.querySelector('#copy').addEventListener('click',async()=>{
-  if (!form.reportValidity()) return;
-  updateMessage();
-  try {await navigator.clipboard.writeText(message.value);document.querySelector('#copied').textContent='已复制，请粘贴到微信发给新人。 Copied. Please send it to the couple.';}
-  catch {message.focus();message.select();document.querySelector('#copied').textContent='请长按复制，然后发给新人。 Select and copy the message.';}
-});
-updateMessage();
-
-const songButton = document.getElementById('load-song');
-if (songButton) {
-  songButton.addEventListener('click', () => {
-    songButton.replaceWith(document.getElementById('song-template').content.cloneNode(true));
-  });
-}
