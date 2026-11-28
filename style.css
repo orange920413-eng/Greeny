@@ -105,3 +105,10 @@ cite span { margin-left: .35em; font-style: italic; }
 .gin-letter summary {cursor:pointer;width:fit-content;padding:.3rem 0}
 
 #backup{margin-top:1.4rem}#backup summary{cursor:pointer}#backup textarea{font:inherit;margin:.7rem 0;padding:.5rem}
+
+#music{max-width:74rem;margin:auto;padding:2.5rem 6vw;display:grid;grid-template-columns:1fr 1.5fr;gap:1.25rem;align-items:center;color:var(--wine)}
+#music h2{font-size:1.7rem;margin:.45rem 0}
+.song-player{min-width:0}
+.song-player iframe{display:block;width:100%;border:0;border-radius:10px}
+.song-player a{font-size:.9rem}
+@media(max-width:720px){#music{grid-template-columns:1fr}}
