@@ -1,3 +1,8 @@
+const alternative = document.getElementById('alternative');
+alternative.addEventListener('toggle', () => {
+  const frame = alternative.querySelector('iframe');
+  if (alternative.open && !frame.hasAttribute('src')) frame.src = frame.dataset.src;
+});
 const form = document.getElementById('rsvp');
 const party = document.getElementById('party');
 const count = document.getElementById('count');
@@ -23,11 +28,20 @@ showCount();
 let edited = false;
 form.addEventListener('input', () => { edited = true; });
 form.addEventListener('change', showCount);
+const endpoint = 'https://gin-greeny-shanghai-2027.bettergreeny.chatgpt.site/api/reply';
+async function readReply() {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 4500);
+  try {
+    const response = await fetch(endpoint, {cache: 'no-store', signal: controller.signal,
+      headers: {Authorization: 'Bearer ' + editKey}});
+    if (!response.ok) throw new Error('Read failed');
+    return await response.json();
+  } finally { clearTimeout(timer); }
+}
 async function restore() {
   try {
-    const response = await fetch('https://gin-greeny-shanghai-2027.bettergreeny.chatgpt.site/api/reply', { headers: {Authorization: 'Bearer ' + editKey} });
-    if (!response.ok) return;
-    const saved = await response.json();
+    const saved = await readReply();
     if (!saved || edited || form.contains(document.activeElement)) return;
     form.elements.guest.value = saved.name;
     form.elements.attending.value = saved.attending ? 'yes' : 'no';
@@ -44,18 +58,25 @@ form.addEventListener('submit', async event => {
   if (!name) { form.elements.guest.focus(); return; }
   button.disabled = true;
   showStatus('正在提交…', 'Sending…');
+  const attending = form.elements.attending.value === 'yes';
+  const guests = attending ? Number(count.value) : 0;
   try {
-    const attending = form.elements.attending.value === 'yes';
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 25000);
-    const result = await fetch('https://gin-greeny-shanghai-2027.bettergreeny.chatgpt.site/api/reply', {
+    const timeout = setTimeout(() => controller.abort(), 9000);
+    const result = await fetch(endpoint, {
       method: 'POST', signal: controller.signal,
       headers: {'Content-Type': 'text/plain;charset=UTF-8'},
-      body: JSON.stringify({editKey, name, attending, guests: attending ? Number(count.value) : 0})
+      body: JSON.stringify({editKey, name, attending, guests})
     }).finally(() => clearTimeout(timeout));
     if (!result.ok || (await result.json()).ok !== true) throw new Error();
     showStatus('谢谢，已收到你的回执。', 'Thank you, your reply is saved.');
   } catch {
-    showStatus('暂时未能确认收到回执。请稍后在此重试，已填写的内容会保留在本页。', 'Your reply could not be confirmed. Please try again here.');
+    const saved = await readReply().catch(() => null);
+    if (saved && saved.name === name && Boolean(saved.attending) === attending && saved.guests === guests) {
+      showStatus('谢谢，已收到你的回执。', 'Thank you, your reply is saved.');
+    } else {
+      showStatus('未能确认收到回执。你可以重试，或填写下方备用表单。', 'Please retry or use the backup form below.');
+      alternative.open = true;
+    }
   } finally { button.disabled = false; }
 });
