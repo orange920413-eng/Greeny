@@ -112,3 +112,5 @@ cite span { margin-left: .35em; font-style: italic; }
 .song-player iframe{display:block;width:100%;border:0;border-radius:10px}
 .song-player a{font-size:.9rem}
 @media(max-width:720px){#music{grid-template-columns:1fr}}
+
+.music-toggle{position:fixed;right:1rem;bottom:1rem;z-index:3;border:1px solid #a9907c;border-radius:2rem;background:#fbf4e6;color:#68182d;padding:.55rem .9rem;cursor:pointer}
